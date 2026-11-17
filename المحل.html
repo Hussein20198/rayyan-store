@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d6849">
+  <title>مكتب الريان ستور | الحسابات</title>
+
+  <style>
+    :root {
+      --green: #0d6849;
+      --green-dark: #084d37;
+      --green-light: #e9f5ef;
+      --gold: #e5b75c;
+      --ink: #19372d;
+      --muted: #74847c;
+      --bg: #f3f7f4;
+      --border: #e8eee9;
+      --red: #bd4545;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px 15px 40px;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at top right, #e3f2e9 0, transparent 42%),
+        var(--bg);
+    }
+
+    main { width: min(100%, 620px); margin: 20px auto; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 4px 20px;
+    }
+
+    .logo {
+      width: 66px;
+      height: 66px;
+      flex: 0 0 66px;
+      filter: drop-shadow(0 6px 8px #0d684922);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 5vw, 1.7rem);
+      color: var(--green-dark);
+    }
+
+    .brand p { margin: 5px 0 0; color: var(--muted); font-size: .9rem; }
+    .date-label { margin: 0 4px 15px; color: var(--muted); font-size: .92rem; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      margin-top: 14px;
+      padding: 19px;
+      border: 1px solid white;
+      border-radius: 19px;
+      background: white;
+      box-shadow: 0 8px 24px #1a47320c;
+    }
+
+    .summary .card { margin-top: 0; min-height: 112px; }
+    .label { color: var(--muted); font-size: .88rem; }
+
+    .total {
+      margin-top: 10px;
+      font-size: clamp(1.3rem, 6vw, 1.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .gold { color: #a57818; }
+    .currency { margin-top: 5px; color: var(--muted); font-size: .78rem; }
+
+    h2 { margin: 0 0 15px; font-size: 1.08rem; }
+
+    form { display: grid; gap: 11px; }
+
+    input, button {
+      width: 100%;
+      min-height: 47px;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    input { outline: none; background: #fbfdfb; color: var(--ink); }
+    input:focus { border-color: var(--green); box-shadow: 0 0 0 3px #0d684914; }
+
+    button {
+      border: 0;
+      background: var(--green);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { background: var(--green-dark); }
+
+    .expense-button { background: #a23f3f; }
+    .expense-button:hover { background: #853333; }
+
+    .list-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .month-name { color: var(--muted); font-size: .82rem; }
+    .entries { display: grid; }
+
+    .entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .entry:last-child { border-bottom: 0; }
+
+    .entry-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      border-radius: 12px;
+      background: var(--green-light);
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .entry-mark.expense { background: #fff0ef; color: var(--red); }
+    .entry-info { min-width: 0; flex: 1; }
+    .entry-title { overflow: hidden; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .entry-date { margin-top: 3px; color: var(--muted); font-size: .78rem; }
+    .entry-side { display: flex; align-items: center; gap: 7px; }
+    .entry-amount { white-space: nowrap; font-weight: 750; }
+    .entry-amount.expense { color: var(--red); }
+
+    .delete-button {
+      width: 32px;
+      min-height: 32px;
+      padding: 0;
+      border-radius: 9px;
+      background: #fff0ef;
+      color: var(--red);
+      font-size: 1rem;
+    }
+
+    .delete-button:hover { background: #ffe1df; }
+    .empty { padding: 18px 0 5px; color: var(--muted); text-align: center; font-size: .9rem; }
+    .footer { padding-top: 20px; color: #8b9992; text-align: center; font-size: .78rem; }
+
+    @media (max-width: 420px) {
+      body { padding: 16px 12px 30px; }
+      .card { padding: 16px; }
+      .summary { gap: 9px; }
+      .summary .card { padding: 14px 12px; }
+      .entry { gap: 7px; }
+      .entry-side { gap: 5px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header class="brand">
+      <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="لوكو مكتب الريان ستور">
+        <defs>
+          <linearGradient id="logoBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#16825b"/>
+            <stop offset="1" stop-color="#084d37"/>
+          </linearGradient>
+        </defs>
+        <rect x="5" y="5" width="90" height="90" rx="27" fill="url(#logoBg)"/>
+        <path d="M24 43h52l-5 34H29z" fill="#fff"/>
+        <path d="M37 43v-7a13 13 0 0 1 26 0v7"
+              fill="none" stroke="#e5b75c" stroke-width="5" stroke-linecap="round"/>
+        <path d="M38 57c5 5 9 5 14 0 5-5 9-5 14 0"
+              fill="none" stroke="#16825b" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="74" cy="25" r="7" fill="#e5b75c"/>
+      </svg>
+      <div>
+        <h1>مكتب الريان ستور</h1>
+        <p>متابعة الأرباح والمصروفات</p>
+      </div>
+    </header>
+
+    <div class="date-label" id="todayDate"></div>
+
+    <section class="summary">
+      <div class="card">
+        <div class="label">أرباح اليوم</div>
+        <div class="total green" id="dailyTotal">0</div>
+        <div class="currency">دينار عراقي</div>
+      </div>
+
+      <div class="card">
+        <div class="label">أرباح هذا الشهر</div>
+        <div class="total green" id="monthlyIncome">0</div>
+        <div class="currency">دينار عراقي</div>
+      </div>
+
+      <div class="card">
+        <div class="label">مصروفات هذا الشهر</div>
+        <div class="total red" id="monthlyExpenses">0</div>
+        <div class="currency">دينار عراقي</div>
+      </div>
+
+      <div class="card">
+        <div class="label">الصافي بعد المصروفات</div>
+        <div class="total gold" id="monthlyNet">0</div>
+        <div class="currency">دينار عراقي</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>أضف ربح</h2>
+      <form id="incomeForm">
+        <input id="incomeDescription" type="text" placeholder="وصف الربح (اختياري)">
+        <input id="incomeAmount" type="number" min="1" step="any"
+               inputmode="decimal" placeholder="مبلغ الربح بالدينار العراقي" required>
+        <button type="submit">＋ إضافة الربح</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>أضف مصروف</h2>
+      <form id="expenseForm">
+        <input id="expenseDescription" type="text" placeholder="وصف المصروف، مثلاً: توصيل أو شراء">
+        <input id="expenseAmount" type="number" min="1" step="any"
+               inputmode="decimal" placeholder="مبلغ المصروف بالدينار العراقي" required>
+        <button class="expense-button" type="submit">− إضافة المصروف</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="list-heading">
+        <h2>حركة هذا الشهر</h2>
+        <span class="month-name" id="monthName"></span>
+      </div>
+      <div class="entries" id="entries"></div>
+    </section>
+
+    <div class="footer">مكتب الريان ستور • سجل الأرباح والمصروفات</div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "all-my-earnings";
+    const OLD_PREFIX = "daily-earnings-";
+
+    function getDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    const now = new Date();
+    const today = getDateKey(now);
+    const currentMonth = today.slice(0, 7);
+
+    document.getElementById("todayDate").textContent =
+      now.toLocaleDateString("ar-IQ", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+    document.getElementById("monthName").textContent =
+      now.toLocaleDateString("ar-IQ", { month: "long", year: "numeric" });
+
+    let records = [];
+
+    try {
+      records = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      if (!Array.isArray(records)) records = [];
+    } catch {
+      records = [];
+    }
+
+    // الحفاظ على السجلات الموجودة من النسخة السابقة ونقلها إذا لزم
+    const known = new Set(
+      records.map(item =>
+        `${item.date}|${item.type || "income"}|${Number(item.amount)}|${item.description || ""}`
+      )
+    );
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || !key.startsWith(OLD_PREFIX)) continue;
+
+      const date = key.slice(OLD_PREFIX.length);
+      let oldItems;
+
+      try {
+        oldItems = JSON.parse(localStorage.getItem(key) || "[]");
+      } catch {
+        continue;
+      }
+
+      if (!Array.isArray(oldItems)) continue;
+
+      oldItems.forEach(item => {
+        const record = {
+          date,
+          type: "income",
+          amount: Number(item.amount),
+          description: item.description || ""
+        };
+
+        const signature =
+          `${record.date}|income|${record.amount}|${record.description}`;
+
+        if (Number.isFinite(record.amount) && !known.has(signature)) {
+          records.push(record);
+          known.add(signature);
+        }
+      });
+    }
+
+    function saveAndRender() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      render();
+    }
+
+    function render() {
+      const monthRecords = records.filter(item =>
+        item.date && item.date.startsWith(currentMonth)
+      );
+
+      const dailyIncome = records
+        .filter(item => item.date === today && item.type !== "expense")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const incomeSum = monthRecords
+        .filter(item => item.type !== "expense")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const expenseSum = monthRecords
+        .filter(item => item.type === "expense")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      document.getElementById("dailyTotal").textContent =
+        dailyIncome.toLocaleString("ar-IQ");
+      document.getElementById("monthlyIncome").textContent =
+        incomeSum.toLocaleString("ar-IQ");
+      document.getElementById("monthlyExpenses").textContent =
+        expenseSum.toLocaleString("ar-IQ");
+      document.getElementById("monthlyNet").textContent =
+        (incomeSum - expenseSum).toLocaleString("ar-IQ");
+
+      const list = document.getElementById("entries");
+      list.replaceChildren();
+
+      if (monthRecords.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "ماكو أرباح أو مصروفات مسجلة لهذا الشهر بعد.";
+        list.appendChild(empty);
+        return;
+      }
+
+      monthRecords.slice().reverse().forEach(item => {
+        const isExpense = item.type === "expense";
+        const row = document.createElement("div");
+        row.className = "entry";
+
+        const mark = document.createElement("div");
+        mark.className = "entry-mark" + (isExpense ? " expense" : "");
+        mark.textContent = isExpense ? "−" : "+";
+
+        const info = document.createElement("div");
+        info.className = "entry-info";
+
+        const title = document.createElement("div");
+        title.className = "entry-title";
+        title.textContent =
+          `${item.description || (isExpense ? "مصروف" : "ربح")}`;
+
+        const date = document.createElement("div");
+        date.className = "entry-date";
+        date.textContent =
+          `${isExpense ? "مصروف" : "ربح"} • ${item.date}`;
+
+        info.append(title, date);
+
+        const side = document.createElement("div");
+        side.className = "entry-side";
+
+        const amount = document.createElement("span");
+        amount.className = "entry-amount" + (isExpense ? " expense" : "");
+        amount.textContent =
+          `${Number(item.amount).toLocaleString("ar-IQ")} د.ع`;
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-button";
+        deleteButton.type = "button";
+        deleteButton.textContent = "×";
+        deleteButton.title = "حذف السجل";
+        deleteButton.setAttribute("aria-label", "حذف السجل");
+
+        deleteButton.addEventListener("click", () => {
+          const index = records.indexOf(item);
+          if (index !== -1) {
+            records.splice(index, 1);
+            saveAndRender();
+          }
+        });
+
+        side.append(amount, deleteButton);
+        row.append(mark, info, side);
+        list.appendChild(row);
+      });
+    }
+
+    function addRecord(type, description, amount) {
+      records.push({
+        date: today,
+        type,
+        amount,
+        description
+      });
+      saveAndRender();
+    }
+
+    document.getElementById("incomeForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const amount = Number(document.getElementById("incomeAmount").value);
+      const description =
+        document.getElementById("incomeDescription").value.trim();
+
+      if (!Number.isFinite(amount) || amount <= 0) return;
+
+      addRecord("income", description, amount);
+      event.target.reset();
+    });
+
+    document.getElementById("expenseForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const amount = Number(document.getElementById("expenseAmount").value);
+      const description =
+        document.getElementById("expenseDescription").value.trim();
+
+      if (!Number.isFinite(amount) || amount <= 0) return;
+
+      addRecord("expense", description, amount);
+      event.target.reset();
+    });
+
+    saveAndRender();
+  </script>
+</body>
+</html>
